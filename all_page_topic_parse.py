@@ -9,7 +9,7 @@ while True:
     url = base_url + str(page_num)
     response = requests.get(url).text
     data = BeautifulSoup(response, 'html.parser')
-    topic = ... # get the topic name
+    topic = data.find('h1')
     titles = data.find_all('h3', class_='term-page--news-article--item--title')
     descriptions = data.find_all('p', class_='term-page--news-article--item--dek')
     dates = data.find_all('p', class_='term-page--news-article--item--publication-date')
@@ -18,6 +18,6 @@ while True:
         break
 
     for title, description, date in zip(titles, descriptions, dates):
-        print(title.a.span.text, description.span.text, date.time.text, sep=';')
+        print(topic.text, title.a.span.text, description.span.text, date.time.text, sep=';')
 
     page_num += 1
