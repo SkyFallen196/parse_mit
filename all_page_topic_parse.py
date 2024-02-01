@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd
 
 base_url = 'https://news.mit.edu/topic/machine-learning?page='
 page_num = 0
@@ -9,7 +10,7 @@ while True:
     url = base_url + str(page_num)
     response = requests.get(url).text
     data = BeautifulSoup(response, 'html.parser')
-    topic = data.find('h1')
+    topic = data.find('h1').text
     titles = data.find_all('h3', class_='term-page--news-article--item--title')
     descriptions = data.find_all('p', class_='term-page--news-article--item--dek')
     dates = data.find_all('p', class_='term-page--news-article--item--publication-date')
@@ -18,6 +19,14 @@ while True:
         break
 
     for title, description, date in zip(titles, descriptions, dates):
-        print(topic.text, title.a.span.text, description.span.text, date.time.text, sep=';')
+        urls.append({
+            'Topic': topic,
+            'Title': title.a.span.text,
+            'Description': description.span.text,
+            'Date': date.time.text
+        })
 
     page_num += 1
+
+    df = pd.DataFrame(urls)
+    df.to_csv('machine_learning_news.csv', index=False)
