@@ -34,4 +34,4 @@ for topic in topics:
     all_urls.extend(urls)
 
 df = pd.DataFrame(all_urls)
-df.to_csv('mit_news_articles.csv', index=False)
+df.to_csv('mit_news_articles-utf-8.csv', encoding='utf-8', index=False)
